@@ -63,21 +63,23 @@ platform :ios do
   private_lane :buildCI do |options|
     match(
       type: 'appstore', 
+      git_url: ENV["GIT_CERTIFICATES_URL"],
       # keychain_name: "keychain", 
       # keychain_password: ENV["KEYCHAIN_PASSWORD"],
-      git_url: "https://github.com/Axenu/certificates.git", #5b7fbf6b94b72002d300d50415e0ac3febb2852c
+      # git_url: "https://github.com/Axenu/certificates.git", #5b7fbf6b94b72002d300d50415e0ac3febb2852c
       # username: 'Axenu'
       # git_basic_authorization: Base64.encode64("Axenu:" + ENV["GITHUB_ACCESS_TOKEN"])
-      git_basic_authorization: 'QXhlbnU6NWI3ZmJmNmI5NGI3MjAwMmQzMDBkNTA0MTVlMGFjM2ZlYmIyODUyYw=='
+      # git_basic_authorization: 'QXhlbnU6NWI3ZmJmNmI5NGI3MjAwMmQzMDBkNTA0MTVlMGFjM2ZlYmIyODUyYw=='
       )
       match(
         type: 'development', 
+        git_url: ENV["GIT_CERTIFICATES_URL"],
         # keychain_name: "keychain", 
         # keychain_password: ENV["KEYCHAIN_PASSWORD"],
-        git_url: "https://github.com/Axenu/certificates.git", #5b7fbf6b94b72002d300d50415e0ac3febb2852c
+        # git_url: "https://github.com/Axenu/certificates.git", #5b7fbf6b94b72002d300d50415e0ac3febb2852c
         # username: 'Axenu'
         # git_basic_authorization: Base64.encode64("Axenu:" + ENV["GITHUB_ACCESS_TOKEN"])
-        git_basic_authorization: 'QXhlbnU6NWI3ZmJmNmI5NGI3MjAwMmQzMDBkNTA0MTVlMGFjM2ZlYmIyODUyYw=='
+        # git_basic_authorization: 'QXhlbnU6NWI3ZmJmNmI5NGI3MjAwMmQzMDBkNTA0MTVlMGFjM2ZlYmIyODUyYw=='
         )
     increment_build_number()
 
