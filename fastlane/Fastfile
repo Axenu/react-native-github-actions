@@ -1,0 +1,116 @@
+fastlane_version '2.53.1'
+
+xcodeproj = "./ios/actions.xcodeproj"
+workspace = "./ios/actions.xcworkspace"
+scheme = "actions"
+
+before_all do
+  #ensure_git_branch
+  #nsure_git_status_clean
+  #git_pull
+end
+
+platform :ios do
+   # iOS Lanes
+
+  desc 'Fetch certificates and provisioning profiles'
+  lane :certificates do
+    match(type: 'development', readonly: true)
+    match(type: 'appstore', readonly: true)
+  end
+
+  desc 'Build the iOS application.'
+  private_lane :build do |options|
+    certificates
+    # cocoapods(podfile: './ios/Podfile')
+    increment_build_number(xcodeproj: xcodeproj)
+
+    if options[:bump]
+
+      increment_version_number(bump_type: options[:bump])
+    end
+
+    gym(scheme: scheme, workspace: workspace)
+  end
+
+  desc 'Ship to Testflight.'
+  lane :beta do |options|
+
+    build(options) 
+    pilot(username: "iosdevsimon@gmail.com", skip_waiting_for_build_processing: false)
+    clean_build_artifacts
+    #sentry
+    #commit_version_bump(message: 'Bump build', xcodeproj: './ios/DropAStory.xcodeproj')
+    #push_to_git_remote
+  end
+
+
+
+  desc 'Setup keychain for github CI'
+  private_lane :setup_project do
+    # create_keychain(
+    #   name: "keychain",
+    #   password: ENV["KEYCHAIN_PASSWORD"],
+    #   default_keychain: true,
+    #   unlock: true,
+    #   timeout: 3600,
+    #   lock_when_sleeps: false
+    # )
+    setup_ci(force: true)
+  end
+
+  desc 'build CI'
+  private_lane :buildCI do |options|
+    match(
+      type: 'appstore', 
+      # keychain_name: "keychain", 
+      # keychain_password: ENV["KEYCHAIN_PASSWORD"],
+      git_url: "https://github.com/Axenu/certificates.git", #5b7fbf6b94b72002d300d50415e0ac3febb2852c
+      # username: 'Axenu'
+      # git_basic_authorization: Base64.encode64("Axenu:" + ENV["GITHUB_ACCESS_TOKEN"])
+      git_basic_authorization: 'QXhlbnU6NWI3ZmJmNmI5NGI3MjAwMmQzMDBkNTA0MTVlMGFjM2ZlYmIyODUyYw=='
+      )
+      match(
+        type: 'development', 
+        # keychain_name: "keychain", 
+        # keychain_password: ENV["KEYCHAIN_PASSWORD"],
+        git_url: "https://github.com/Axenu/certificates.git", #5b7fbf6b94b72002d300d50415e0ac3febb2852c
+        # username: 'Axenu'
+        # git_basic_authorization: Base64.encode64("Axenu:" + ENV["GITHUB_ACCESS_TOKEN"])
+        git_basic_authorization: 'QXhlbnU6NWI3ZmJmNmI5NGI3MjAwMmQzMDBkNTA0MTVlMGFjM2ZlYmIyODUyYw=='
+        )
+    increment_build_number()
+
+    if options[:bump]
+      increment_version_number(bump_type: options[:bump])
+    end
+    # enable_automatic_code_signing(path: "./ios/UnMary.xcworkspace")
+
+    # settings_to_override = {
+    #   :BUNDLE_IDENTIFIER => "com.axenu.dropastory",
+    #   :PROVISIONING_PROFILE_SPECIFIER => "match AppStore com.axenu.dropastory",
+    #   :DEVELOPMENT_TEAM => "BGAEM8HDFP"
+    # }
+
+    gym(
+      # scheme: 'DropAStory', 
+      # workspace: './ios/DropAStory.xcworkspace', 
+      export_method: "app-store",
+      # xcargs: settings_to_override,
+      # export_options: {
+      #   provisioningProfiles: { 
+      #       'com.axenu.dropastory' => "match AppStore com.axenu.dropastory"
+      #   }
+      # }
+    )
+  end
+
+  desc 'build in CI'
+  lane :betaCI do |options|
+    setup_project
+    buildCI(options)
+    pilot(username: "iosdevsimon@gmail.com", skip_waiting_for_build_processing: false)
+  end
+  
+
+end

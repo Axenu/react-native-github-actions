@@ -1,0 +1,38 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: macOS-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    # - run: mkdir ~/.ssh/ && echo -e "Host github.com\n\tStrictHostKeyChecking no\n" > ~/.ssh/config
+    - name: Install node_modules
+      run: yarn install
+    # - name: run tests
+      # run: yarn test
+#     - name: build android
+#       run: ./gradlew bundleRelease
+#       working-directory: ./android
+    - name: Install pods
+      working-directory: ./ios
+      run: pod install
+    - name: run fastlane beta CI
+      env:
+        APPLE_ACCOUNT: "iosdevsimon@gmail.com"
+        TEAM_ID: "BGAEM8HDFP"
+        KEYCHAIN_PASSWORD: ${{secrets.KEYCHAIN_PASSWORD}}
+        MATCH_REPO: ${{ secrets.MATCH_REPO }}
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        GITHUB_USERNAME: 'Axenu'
+        GITHUB_ACCESS_TOKEN: ${{secrets.GITHUB_ACCESS_TOKEN}}
+        FASTLANE_PASSWORD: ${{secrets.FASTLANE_PASSWORD}}
+        FASTLANE_SESSION: ${{secrets.FASTLANE_SESSION}}
+        FASTLANE_TEAM_ID: 'BGAEM8HDFP'
+        FASTLANE_USER: "iosdevsimon@gmail.com"
+        FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD}}
+      run: |
+        fastlane ios betaCI --verbose
