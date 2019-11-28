@@ -27,7 +27,7 @@ platform :ios do
 
     if options[:bump]
 
-      increment_version_number(bump_type: options[:bump])
+      increment_version_number(xcodeproj: xcodeproj, bump_type: options[:bump])
     end
 
     gym(scheme: scheme, workspace: workspace)
@@ -81,10 +81,10 @@ platform :ios do
         # git_basic_authorization: Base64.encode64("Axenu:" + ENV["GITHUB_ACCESS_TOKEN"])
         # git_basic_authorization: 'QXhlbnU6NWI3ZmJmNmI5NGI3MjAwMmQzMDBkNTA0MTVlMGFjM2ZlYmIyODUyYw=='
         )
-    increment_build_number()
+    increment_build_number(xcodeproj: xcodeproj)
 
     if options[:bump]
-      increment_version_number(bump_type: options[:bump])
+      increment_version_number(xcodeproj: xcodeproj, bump_type: options[:bump])
     end
     # enable_automatic_code_signing(path: "./ios/UnMary.xcworkspace")
 
@@ -95,6 +95,8 @@ platform :ios do
     # }
 
     gym(
+      scheme: scheme, 
+      workspace: workspace,
       # scheme: 'DropAStory', 
       # workspace: './ios/DropAStory.xcworkspace', 
       export_method: "app-store",
