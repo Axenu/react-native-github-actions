@@ -33,7 +33,7 @@ jobs:
         FASTLANE_SESSION: ${{secrets.FASTLANE_SESSION}}
         FASTLANE_TEAM_ID: 'BGAEM8HDFP'
         FASTLANE_USER: "iosdevsimon@gmail.com"
-        GIT_CERTIFICATES_URL: ${{seecrets.GIT_CERTIFICATES_URL}}
+        GIT_CERTIFICATES_URL: ${{secrets.GIT_CERTIFICATES_URL}}
         FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD}}
       run: |
         fastlane ios betaCI --verbose
