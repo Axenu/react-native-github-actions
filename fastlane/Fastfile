@@ -98,6 +98,7 @@ platform :ios do
       scheme: scheme, 
       workspace: workspace,
       export_method: "app-store",
+      include_symbols: false,
       # xcargs: settings_to_override,
       # export_options: {
       #   provisioningProfiles: { 
