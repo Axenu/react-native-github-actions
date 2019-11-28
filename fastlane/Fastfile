@@ -86,7 +86,7 @@ platform :ios do
     if options[:bump]
       increment_version_number(xcodeproj: xcodeproj, bump_type: options[:bump])
     end
-    enable_automatic_code_signing(path: workspace)
+    # enable_automatic_code_signing(path: workspace)
 
     # settings_to_override = {
     #   :BUNDLE_IDENTIFIER => "com.axenu.dropastory",
